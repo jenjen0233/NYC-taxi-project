@@ -9,7 +9,7 @@ from datetime import datetime
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# WORKAROUND: Prevent timeout for large files, comment out if running for green datasets
+# WORKAROUND: Prevent timeout for large files, comment out if running for yellow datasets
 # storage.blob._MAX_MULTIPART_SIZE = 5 * 1024 * 1024  # 5 MB
 # storage.blob._DEFAULT_CHUNKSIZE = 5 * 1024 * 1024  # 5 MB
 

@@ -1,7 +1,7 @@
 # build docker image
 docker build -t nyc-taxi-ingestion .
 
-# Set up Application Default Credentials (ADC) - THIS IS KEY!
+# Set up Application Default Credentials
 gcloud auth application-default login
 
 # Set your project
@@ -10,16 +10,18 @@ gcloud config set project YOUR_PROJECT_ID
 # Verify authentication
 gcloud auth list
 
+# Example file URLs
 https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-01.parquet
 
-# Run the ingestion script with docker
+# Run the ingestion script with docker, note with yellow dataset we will have to uncomment the lines of codes in the ingest_data.py lines to avoid timeout issues, for green dataset we can leave them commented out
+# replace PROJECT_ID, BUCKET_NAME, YEARS, DATASET_TYPE with your own values
 docker run --rm \
   -v ~/.config/gcloud:/root/.config/gcloud \
   -v ~/Desktop/nyc-taxi-project/nyc-taxi-ingestion/ingest_data.py:/app/ingest_data.py \
   -e PROJECT_ID="project" \
   -e BUCKET_NAME="bucket" \
   -e YEARS="2024,2025" \
-  -e DATASET_TYPE="yellow" \
+  -e DATASET_TYPE="yellow" \ 
   nyc-taxi-ingestion
 
 https://d37ci6vzurychx.cloudfront.net/trip-data/fhv_tripdata_2024-02.parquet
@@ -30,9 +32,27 @@ https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv
 # CLI Knowledge
 code . (launch VS Code from terminal)
 
+# GCP instance and ssh key knowledge
+# to connect to gcloud instances, we have to create private and public ssh keys
+ssh-keygen -t rsa -f ~/.ssh/google_compute_engine -C jenniferma
+# then go to GCP console and add the public key to metadata
+# then we can come back to terminal and add the private key to ssh agent
+ssh -i gcp jenniferma@{external-ip}
 
-# Docker Knowledge
+# create a shortcut command for ssh in .ssh/config_gcp
+nano ~/.ssh/config_gcp
+# in the file, add more instances if needed for different projects
+Host another-vm
+    HostName 12.34.56.78
+    User myuser
+    IdentityFile ~/.ssh/gcp
 
-# GCP Knowledge
+Host prod-server
+    HostName 98.76.54.32
+    User admin
+    IdentityFile ~/.ssh/gcp
+
+
+
 
 
